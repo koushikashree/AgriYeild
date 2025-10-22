@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="appTitle">AgriYield Predictor: Karnataka</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#10b981',
+                        'secondary-gold': '#fbbf24',
+                        'indigo-button': '#6366f1',
+                        'bg-light': '#f9fafb',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for better look and feel */
+        body {
+            background-color: #f9fafb;
+            font-family: 'Inter', sans-serif;
+        }
+        .step-container {
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Pre-Step: Start Modal (User interaction required for voice) -->
+    <div id="start-modal-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl p-8 max-w-sm w-full card text-center transform scale-100 transition duration-300">
+            <h3 data-i18n-key="startModalTitle" class="text-2xl font-extrabold mb-4 text-primary-green">Welcome to AgriYield Predictor</h3>
+            <p data-i18n-key="startModalMessage" class="text-gray-700 mb-6">Click **Start** to enable the voice assistant and begin the selection process for your farm details.</p>
+            <button onclick="startApp()" data-i18n-key="startModalButton" class="w-full py-3 px-4 bg-primary-green text-white font-bold rounded-lg hover:bg-emerald-600 transition duration-150 shadow-lg">
+                Start
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application Container (Hidden until start is clicked) -->
+    <div id="app-container" class="w-full max-w-2xl bg-white rounded-xl card overflow-hidden hidden">
+        <header class="p-6 bg-primary-green text-white text-center rounded-t-xl">
+            <h1 data-i18n-key="appTitle" class="text-3xl font-extrabold tracking-tight">🌾 AgriYield Predictor</h1>
+            <p data-i18n-key="appSubtitle" class="text-sm opacity-90 mt-1">Karnataka State Yield Forecasting</p>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div id="content-area" class="p-6">
+
+            <!-- =========================== -->
+            <!-- STEP 1: Language Selection -->
+            <!-- =========================== -->
+            <div id="step-1" class="step-container hidden">
+                <h2 id="step1-title" class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-i18n-key="step1Title">Step 1: Language Selection</h2>
+
+                <div id="voice-message" class="text-center mb-6 p-4 bg-blue-100 border border-blue-200 rounded-lg text-blue-800">
+                    <p data-i18n-key="voicePrompt" class="font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 -mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                        Voice Assistant is active. Please select the language!
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    <button onclick="selectLanguage('en')" class="w-full py-3 px-4 bg-primary-green text-white font-bold rounded-lg hover:bg-emerald-600 transition duration-150">
+                        English
+                    </button>
+                    <button onclick="selectLanguage('kn')" class="w-full py-3 px-4 bg-secondary-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition duration-150">
+                        ಕನ್ನಡ (Kannada)
+                    </button>
+                    <button onclick="selectLanguage('te')" class="w-full py-3 px-4 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-600 transition duration-150">
+                        తెలుగు (Telugu)
+                    </button>
+                </div>
+            </div>
+
+            <!-- =========================== -->
+            <!-- STEP 2: Input Collection -->
+            <!-- =========================== -->
+            <div id="step-2" class="step-container hidden">
+                <h2 id="step2-title" class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-i18n-key="step2Title">Step 2: Enter Farm Details</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-1">
+                        <label for="district" data-i18n-key="labelDistrict" class="block text-sm font-medium text-gray-700">District Selection</label>
+                        <select id="district" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-green focus:border-primary-green sm:text-sm rounded-md">
+                            <option data-i18n-key="selectDistrictPlaceholder" value="">-- Select District --</option>
+                            <!-- Options remain in English for data consistency -->
+                            <option value="Bengaluru Urban">Bengaluru Urban</option>
+                            <option value="Mysuru">Mysuru</option>
+                            <option value="Mandya">Mandya</option>
+                            <option value="Shivamogga">Shivamogga</option>
+                            <option value="Belagavi">Belagavi</option>
+                            <option value="Kalaburagi">Kalaburagi</option>
+                            <option value="Dharwad">Dharwad</option>
+                            <option value="Chikmagalur">Chikmagalur</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label for="season" data-i18n-key="labelSeason" class="block text-sm font-medium text-gray-700">Season</label>
+                        <select id="season" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-green focus:border-primary-green sm:text-sm rounded-md">
+                            <option data-i18n-key="selectSeasonPlaceholder" value="">-- Select Season --</option>
+                            <option value="Kharif">Kharif (Monsoon)</option>
+                            <option value="Rabi">Rabi (Winter)</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label for="year" data-i18n-key="labelYear" class="block text-sm font-medium text-gray-700">Year</label>
+                        <select id="year" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-green focus:border-primary-green sm:text-sm rounded-md">
+                            <option data-i18n-key="selectYearPlaceholder" value="">-- Select Year --</option>
+                            <script>
+                                const currentYear = new Date().getFullYear();
+                                for (let y = currentYear; y >= currentYear - 5; y--) {
+                                    document.write(`<option value="${y}">${y}</option>`);
+                                }
+                            </script>
+                        </select>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label for="crop" data-i18n-key="labelCrop" class="block text-sm font-medium text-gray-700">Crop</label>
+                        <select id="crop" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-green focus:border-primary-green sm:text-sm rounded-md">
+                            <option data-i18n-key="selectCropPlaceholder" value="">-- Select Crop --</option>
+                            <!-- Crop options remain in English for data consistency -->
+                            <option value="Rice (Paddy)">Rice (Paddy)</option>
+                            <option value="Maize">Maize</option>
+                            <option value="Finger Millet (Ragi)">Finger Millet (Ragi)</option>
+                            <option value="Sorghum (Jowar)">Sorghum (Jowar)</option>
+                            <option value="Pigeon Pea (Tur/Red Gram)">Pigeon Pea (Tur/Red Gram)</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                            <option value="Groundnut">Groundnut</option>
+                            <option value="Sunflower">Sunflower</option>
+                            <option value="Coffee">Coffee</option>
+                            <option value="Cotton">Cotton</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="nextStep(2)" id="btn-next-step2" data-i18n-key="btnNextManagement" class="mt-6 w-full py-3 px-4 bg-primary-green text-white font-bold rounded-lg hover:bg-emerald-600 transition duration-150 shadow-lg">
+                    Next: Management Inputs
+                </button>
+            </div>
+
+            <!-- =========================== -->
+            <!-- STEP 3: Management Inputs -->
+            <!-- =========================== -->
+            <div id="step-3" class="step-container hidden">
+                <h2 id="step3-title" class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-i18n-key="step3Title">Step 3: Farm Management Checklist</h2>
+
+                <div class="space-y-4">
+
+                    <!-- Soil Fertility Test -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qSoilTest" class="font-medium text-gray-700 mb-2">Soil Fertility Test Done? (Find-S Algorithm Input)</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="soilTest" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="soilTest" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Seed Quality Test -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qSeedTest" class="font-medium text-gray-700 mb-2">Seed Quality Test Done?</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="seedTest" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="seedTest" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Pre-emergence Spray -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qPreEmergence" class="font-medium text-gray-700 mb-2">Pre-emergence Herbicide Sprayed?</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="preEmergence" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="preEmergence" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Rainfall Input and Info -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <label for="rainfall" data-i18n-key="labelRainfall" class="block text-sm font-medium text-gray-700">Observed Rainfall during Season</label>
+                        <select id="rainfall" onchange="showRainfallInfo()" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-green focus:border-primary-green sm:text-sm rounded-md">
+                            <option data-i18n-key="selectRainfallPlaceholder" value="">-- Select Level --</option>
+                            <option data-i18n-key="optLess" value="Less">Less</option>
+                            <option data-i18n-key="optModerate" value="Moderate">Moderate</option>
+                            <option data-i18n-key="optHigh" value="High">High</option>
+                        </select>
+                        <p id="rec-rainfall" class="text-sm text-blue-600 mt-2 hidden"></p>
+                    </div>
+
+                    <!-- Weed Management -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qWeedMgmt" class="font-medium text-gray-700 mb-2">Effective Weed Management Done?</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="weedMgmt" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="weedMgmt" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Pest Management -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qPestMgmt" class="font-medium text-gray-700 mb-2">Effective Pest Management Done?</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="pestMgmt" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="pestMgmt" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Seed Rate Check -->
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <p data-i18n-key="qSeedRate" class="font-medium text-gray-700 mb-2">Seed Rate (Acres per Seed) Checked and Correct?</p>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center"><input type="radio" name="seedRate" value="Yes" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optYes">Yes</span></label>
+                            <label class="inline-flex items-center"><input type="radio" name="seedRate" value="No" class="form-radio text-primary-green h-4 w-4"> <span class="ml-2" data-i18n-key="optNo">No</span></label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button onclick="nextStep(3)" id="btn-predict-yield" data-i18n-key="btnPredictYield" class="mt-6 w-full py-3 px-4 bg-primary-green text-white font-bold rounded-lg hover:bg-emerald-600 transition duration-150 shadow-lg">
+                    Predict Yield
+                </button>
+            </div>
+
+            <!-- =========================== -->
+            <!-- STEP 4 & 5: Prediction Result -->
+            <!-- =========================== -->
+            <div id="step-4" class="step-container hidden">
+                <h2 id="step4-title" class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-i18n-key="step4Title">Step 4: Yield Prediction</h2>
+
+                <div id="prediction-result" class="text-center p-8 rounded-xl shadow-2xl transition duration-500">
+                    <!-- Content populated by JavaScript -->
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="resetApp()" id="btn-reset" data-i18n-key="btnReset" class="py-2 px-6 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 transition duration-150">
+                        Start New Prediction
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Pop-up Modal -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center p-4 z-50 transition-opacity duration-300 opacity-0">
+        <div id="modal-content" class="bg-white rounded-xl p-6 max-w-sm w-full card transform scale-90 transition-transform duration-300">
+            <h3 id="modal-title" class="text-xl font-bold mb-3 text-primary-green" data-i18n-key="modalTitleRecommendation">Recommendation</h3>
+            <p id="modal-message" class="text-gray-700 mb-4"></p>
+            <button onclick="closeModal()" id="btn-modal-ack" data-i18n-key="modalButtonAcknowledge" class="w-full py-2 bg-primary-green text-white font-semibold rounded-lg hover:bg-emerald-600 transition duration-150">
+                Acknowledge
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const STEPS = ['step-1', 'step-2', 'step-3', 'step-4'];
+        let currentStep = 1;
+        let currentLangKey = 'en'; // Default language
+
+        // --- Translation Data ---
+        const translations = {
+            en: {
+                appTitle: "🌾 AgriYield Predictor",
+                appSubtitle: "Karnataka State Yield Forecasting",
+                startModalTitle: "Welcome to AgriYield Predictor",
+                startModalMessage: "Click **Start** to enable the voice assistant and begin the selection process for your farm details.",
+                startModalButton: "Start",
+                step1Title: "Step 1: Language Selection",
+                voicePrompt: "Voice Assistant is active. Please select the language!",
+                step2Title: "Step 2: Enter Farm Details",
+                labelDistrict: "District Selection",
+                selectDistrictPlaceholder: "-- Select District --",
+                labelSeason: "Season",
+                selectSeasonPlaceholder: "-- Select Season --",
+                labelYear: "Year",
+                selectYearPlaceholder: "-- Select Year --",
+                labelCrop: "Crop",
+                selectCropPlaceholder: "-- Select Crop --",
+                btnNextManagement: "Next: Management Inputs",
+                step3Title: "Step 3: Farm Management Checklist",
+                qSoilTest: "Soil Fertility Test Done? (Find-S Algorithm Input)",
+                qSeedTest: "Seed Quality Test Done?",
+                qPreEmergence: "Pre-emergence Herbicide Sprayed?",
+                labelRainfall: "Observed Rainfall during Season",
+                selectRainfallPlaceholder: "-- Select Level --",
+                optLess: "Less",
+                optModerate: "Moderate",
+                optHigh: "High",
+                qWeedMgmt: "Effective Weed Management Done?",
+                qPestMgmt: "Effective Pest Management Done?",
+                qSeedRate: "Seed Rate (Acres per Seed) Checked and Correct?",
+                btnPredictYield: "Predict Yield",
+                step4Title: "Step 4: Yield Prediction",
+                btnReset: "Start New Prediction",
+                optYes: "Yes",
+                optNo: "No",
+                modalTitleRecommendation: "Recommendation",
+                modalButtonAcknowledge: "Acknowledge",
+                // Dynamic Message Templates (used in JS logic)
+                msgInputError: "Please answer all questions in the Farm Management Checklist.",
+                msgYieldUnitQuintal: "Quintals/Acre",
+                msgYieldUnitTonne: "Tonnes/Acre",
+                msgOptimalManagement: "Great Job! All management practices are checked 'Yes'. This indicates a strong potential for high yield!",
+                msgBestCropRecIntro: "Based on **{district}** and **{season}**, the recommended best-fit crop is **{bestCrop}**.",
+                msgBestCropRecBody: "You can still proceed with your choice of **{crop}**, but the prediction may be lower.",
+                msgCriticalRecTitle: "⚠️ Immediate Action Recommended",
+                msgCriticalRecIntro: "Your yield prediction will be penalized based on the following unaddressed management practices. Please address these for future crops:",
+                msgRecFertilizer: "**Fertilizer:** Please conduct a soil test. Until results are available, we recommend using {fertilizerRec}",
+                msgRecSeedQuality: "**Seed Quality:** Please do a seed quality test (e.g., germination test) for a higher germination rate and better yield.",
+                msgRecPreEmergence: "**Pre-emergence:** Please spray a pre-emergence herbicide for effective early weed control.",
+                msgRecWeedMgmt: "**Weed Management:** Please spray herbicides at the appropriate time for better yield.",
+                msgRecPestMgmt: "**Pest Management:** Please spray pesticides to protect your crop from damage.",
+                msgRecSeedRate: "**Seed Rate:** The optimal seed rate for **{crop}** is approximately **{rate}**. Please verify your rate to prevent stand issues.",
+            },
+            kn: {
+                appTitle: "🌾 ಕೃಷಿ ಇಳುವರಿ ಭವಿಷ್ಯ",
+                appSubtitle: "ಕರ್ನಾಟಕ ರಾಜ್ಯದ ಇಳುವರಿ ಮುನ್ಸೂಚನೆ",
+                startModalTitle: "ಕೃಷಿ ಇಳುವರಿ ಭವಿಷ್ಯಕ್ಕೆ ಸುಸ್ವಾಗತ",
+                startModalMessage: "ಧ್ವನಿ ಸಹಾಯಕವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಮತ್ತು ನಿಮ್ಮ ಕೃಷಿ ವಿವರಗಳ ಆಯ್ಕೆ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು **ಪ್ರಾರಂಭಿಸಿ** ಕ್ಲಿಕ್ ಮಾಡಿ.",
+                startModalButton: "ಪ್ರಾರಂಭಿಸಿ",
+                step1Title: "ಹಂತ 1: ಭಾಷಾ ಆಯ್ಕೆ",
+                voicePrompt: "ಧ್ವನಿ ಸಹಾಯಕ ಸಕ್ರಿಯವಾಗಿದೆ. ದಯವಿಟ್ಟು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ!",
+                step2Title: "ಹಂತ 2: ಕೃಷಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ",
+                labelDistrict: "ಜಿಲ್ಲಾ ಆಯ್ಕೆ",
+                selectDistrictPlaceholder: "-- ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
+                labelSeason: "ಋತು",
+                selectSeasonPlaceholder: "-- ಋತುವನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
+                labelYear: "ವರ್ಷ",
+                selectYearPlaceholder: "-- ವರ್ಷವನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
+                labelCrop: "ಬೆಳೆ",
+                selectCropPlaceholder: "-- ಬೆಳೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
+                btnNextManagement: "ಮುಂದೆ: ನಿರ್ವಹಣಾ ಇನ್ಪುಟ್ಗಳು",
+                step3Title: "ಹಂತ 3: ಕೃಷಿ ನಿರ್ವಹಣಾ ಪರಿಶೀಲನಾಪಟ್ಟಿ",
+                qSoilTest: "ಮಣ್ಣಿನ ಫಲವತ್ತತೆ ಪರೀಕ್ಷೆ ಮಾಡಲಾಗಿದೆಯೇ? (ಫೈಂಡ್-ಎಸ್ ಅಲ್ಗಾರಿದಮ್ ಇನ್ಪುಟ್)",
+                qSeedTest: "ಬೀಜದ ಗುಣಮಟ್ಟ ಪರೀಕ್ಷೆ ಮಾಡಲಾಗಿದೆಯೇ?",
+                qPreEmergence: "ಪೂರ್ವ-ಹೊರಹೊಮ್ಮುವ ಕಳೆನಾಶಕವನ್ನು ಸಿಂಪಡಿಸಲಾಗಿದೆಯೇ?",
+                labelRainfall: "ಋತುವಿನಲ್ಲಿ ಗಮನಿಸಿದ ಮಳೆ",
+                selectRainfallPlaceholder: "-- ಮಟ್ಟವನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
+                optLess: "ಕಡಿಮೆ",
+                optModerate: "ಮಧ್ಯಮ",
+                optHigh: "ಹೆಚ್ಚು",
+                qWeedMgmt: "ಪರಿಣಾಮಕಾರಿ ಕಳೆ ನಿರ್ವಹಣೆ ಮಾಡಲಾಗಿದೆಯೇ?",
+                qPestMgmt: "ಪರಿಣಾಮಕಾರಿ ಕೀಟ ನಿರ್ವಹಣೆ ಮಾಡಲಾಗಿದೆಯೇ?",
+                qSeedRate: "ಬೀಜದ ದರ (ಪ್ರತಿ ಬೀಜಕ್ಕೆ ಎಕರೆ) ಪರಿಶೀಲಿಸಲಾಗಿದೆಯೇ ಮತ್ತು ಸರಿಯಾಗಿದೆಯೇ?",
+                btnPredictYield: "ಇಳುವರಿ ಭವಿಷ್ಯ",
+                step4Title: "ಹಂತ 4: ಇಳುವರಿ ಮುನ್ಸೂಚನೆ",
+                btnReset: "ಹೊಸ ಭವಿಷ್ಯವನ್ನು ಪ್ರಾರಂಭಿಸಿ",
+                optYes: "ಹೌದು",
+                optNo: "ಇಲ್ಲ",
+                modalTitleRecommendation: "ಶಿಫಾರಸು",
+                modalButtonAcknowledge: "ಒಪ್ಪಿಕೊಳ್ಳಿ",
+                // Dynamic Message Templates
+                msgInputError: "ಮುಂದುವರಿಯುವ ಮೊದಲು ದಯವಿಟ್ಟು ಕೃಷಿ ನಿರ್ವಹಣಾ ಪರಿಶೀಲನಾಪಟ್ಟಿಯಲ್ಲಿನ ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.",
+                msgYieldUnitQuintal: "ಕ್ವಿಂಟಾಲ್/ಎಕರೆ",
+                msgYieldUnitTonne: "ಟನ್/ಎಕರೆ",
+                msgOptimalManagement: "ಅದ್ಭುತ! ಎಲ್ಲಾ ನಿರ್ವಹಣಾ ಅಭ್ಯಾಸಗಳನ್ನು 'ಹೌದು' ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ. ಇದು ಹೆಚ್ಚಿನ ಇಳುವರಿಗೆ ಉತ್ತಮ ಸಾಮರ್ಥ್ಯವನ್ನು ಸೂಚಿಸುತ್ತದೆ!",
+                msgBestCropRecIntro: "**{district}** ಮತ್ತು **{season}** ಆಧರಿಸಿ, ಶಿಫಾರಸು ಮಾಡಲಾದ ಅತ್ಯುತ್ತಮ-ಹೊಂದಾಣಿಕೆಯ ಬೆಳೆ **{bestCrop}** ಆಗಿದೆ.",
+                msgBestCropRecBody: "ನೀವು ಇನ್ನೂ **{crop}** ಆಯ್ಕೆಯೊಂದಿಗೆ ಮುಂದುವರಿಯಬಹುದು, ಆದರೆ ಮುನ್ಸೂಚನೆಯು ಕಡಿಮೆಯಾಗಿರಬಹುದು.",
+                msgCriticalRecTitle: "⚠️ ತಕ್ಷಣದ ಕ್ರಮ ಶಿಫಾರಸು",
+                msgCriticalRecIntro: "ಈ ಕೆಳಗಿನ ನಿರ್ವಹಣಾ ಅಭ್ಯಾಸಗಳನ್ನು ಪರಿಹರಿಸದ ಕಾರಣ ನಿಮ್ಮ ಇಳುವರಿ ಮುನ್ಸೂಚನೆಯನ್ನು ದಂಡಿಸಲಾಗುತ್ತದೆ. ಭವಿಷ್ಯದ ಬೆಳೆಗಳಿಗೆ ಇವುಗಳನ್ನು ದಯವಿಟ್ಟು ಪರಿಹರಿಸಿ:",
+                msgRecFertilizer: "**ಗೊಬ್ಬರ:** ದಯವಿಟ್ಟು ಮಣ್ಣಿನ ಪರೀಕ್ಷೆಯನ್ನು ನಡೆಸಿ. ಫಲಿತಾಂಶಗಳು ಲಭ್ಯವಾಗುವವರೆಗೆ, ಸಾಮಾನ್ಯ ಬೆಳೆ ಅಗತ್ಯಗಳ ಆಧಾರದ ಮೇಲೆ {fertilizerRec} ಬಳಸಲು ನಾವು ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.",
+                msgRecSeedQuality: "**ಬೀಜದ ಗುಣಮಟ್ಟ:** ಉತ್ತಮ ಮೊಳಕೆಯೊಡೆಯುವಿಕೆ ಮತ್ತು ಉತ್ತಮ ಇಳುವರಿಗಾಗಿ ದಯವಿಟ್ಟು ಬೀಜದ ಗುಣಮಟ್ಟ ಪರೀಕ್ಷೆಯನ್ನು ಮಾಡಿ.",
+                msgRecPreEmergence: "**ಪೂರ್ವ-ಹೊರಹೊಮ್ಮುವಿಕೆ:** ಪರಿಣಾಮಕಾರಿ ಆರಂಭಿಕ ಕಳೆ ನಿಯಂತ್ರಣಕ್ಕಾಗಿ ದಯವಿಟ್ಟು ಪೂರ್ವ-ಹೊರಹೊಮ್ಮುವ ಕಳೆನಾಶಕವನ್ನು ಸಿಂಪಡಿಸಿ.",
+                msgRecWeedMgmt: "**ಕಳೆ ನಿರ್ವಹಣೆ:** ಉತ್ತಮ ಇಳುವರಿಗಾಗಿ ಸೂಕ್ತ ಸಮಯದಲ್ಲಿ ಕಳೆನಾಶಕಗಳನ್ನು ಸಿಂಪಡಿಸಿ.",
+                msgRecPestMgmt: "**ಕೀಟ ನಿರ್ವಹಣೆ:** ನಿಮ್ಮ ಬೆಳೆಯನ್ನು ಹಾನಿಯಿಂದ ರಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ಕೀಟನಾಶಕಗಳನ್ನು ಸಿಂಪಡಿಸಿ.",
+                msgRecSeedRate: "**ಬೀಜದ ದರ:** **{crop}** ಗೆ ಸೂಕ್ತವಾದ ಬೀಜದ ದರವು ಸರಿಸುಮಾರು **{rate}** ಆಗಿದೆ. ಸಮಸ್ಯೆಗಳನ್ನು ತಡೆಯಲು ನಿಮ್ಮ ದರವನ್ನು ದೃಢೀಕರಿಸಿ.",
+            },
+            te: {
+                appTitle: "🌾 వ్యవసాయ దిగుబడి అంచనా",
+                appSubtitle: "కర్ణాటక రాష్ట్ర దిగుబడి అంచనా",
+                startModalTitle: "వ్యవసాయ దిగుబడి అంచనాకు స్వాగతం",
+                startModalMessage: "వాయిస్ అసిస్టెంట్‌ను ప్రారంభించడానికి మరియు మీ వ్యవసాయ వివరాల ఎంపిక ప్రక్రియను ప్రారంభించడానికి **ప్రారంభించు** క్లిక్ చేయండి.",
+                startModalButton: "ప్రారంభించు",
+                step1Title: "దశ 1: భాషా ఎంపిక",
+                voicePrompt: "వాయిస్ అసిస్టెంట్ చురుకుగా ఉంది. దయచేసి భాషను ఎంచుకోండి!",
+                step2Title: "దశ 2: వ్యవసాయ వివరాలను నమోదు చేయండి",
+                labelDistrict: "జిల్లా ఎంపిక",
+                selectDistrictPlaceholder: "-- జిల్లాను ఎంచుకోండి --",
+                labelSeason: "సీజన్",
+                selectSeasonPlaceholder: "-- సీజన్‌ను ఎంచుకోండి --",
+                labelYear: "సంవత్సరం",
+                selectYearPlaceholder: "-- సంవత్సరాన్ని ఎంచుకోండి --",
+                labelCrop: "పంట",
+                selectCropPlaceholder: "-- పంటను ఎంచుకోండి --",
+                btnNextManagement: "తరువాత: నిర్వహణ ఇన్‌పుట్‌లు",
+                step3Title: "దశ 3: వ్యవసాయ నిర్వహణ చెక్‌లిస్ట్",
+                qSoilTest: "నేల సారం పరీక్ష జరిగిందా? (ఫైండ్-ఎస్ అల్గోరిథం ఇన్‌పుట్)",
+                qSeedTest: "విత్తన నాణ్యత పరీక్ష జరిగిందా?",
+                qPreEmergence: "ముందుగా మొలిచే కలుపు సంహారిణిని పిచికారీ చేశారా?",
+                labelRainfall: "సీజన్‌లో గమనించిన వర్షపాతం",
+                selectRainfallPlaceholder: "-- స్థాయిని ఎంచుకోండి --",
+                optLess: "తక్కువ",
+                optModerate: "మితమైన",
+                optHigh: "ఎక్కువ",
+                qWeedMgmt: "సమర్థవంతమైన కలుపు నిర్వహణ జరిగిందా?",
+                qPestMgmt: "సమర్థవంతమైన తెగులు నిర్వహణ జరిగిందా?",
+                qSeedRate: "విత్తన రేటు (విత్తనానికి ఎకరాలు) తనిఖీ చేయబడి, సరైనదా?",
+                btnPredictYield: "దిగుబడిని అంచనా వేయండి",
+                step4Title: "దశ 4: దిగుబడి అంచనా",
+                btnReset: "కొత్త అంచనాను ప్రారంభించండి",
+                optYes: "అవును",
+                optNo: "లేదు",
+                modalTitleRecommendation: "సిఫార్సు",
+                modalButtonAcknowledge: "గుర్తించండి",
+                // Dynamic Message Templates
+                msgInputError: "దయచేసి కొనసాగడానికి ముందు వ్యవసాయ నిర్వహణ చెక్‌లిస్ట్‌లోని అన్ని ప్రశ్నలకు సమాధానం ఇవ్వండి.",
+                msgYieldUnitQuintal: "క్వింటాళ్ళు/ఎకరం",
+                msgYieldUnitTonne: "టన్నులు/ఎకరం",
+                msgOptimalManagement: "గొప్ప పని! అన్ని నిర్వహణ పద్ధతులు 'అవును' అని తనిఖీ చేయబడ్డాయి. ఇది అధిక దిగుబడికి బలమైన సామర్థ్యాన్ని సూచిస్తుంది!",
+                msgBestCropRecIntro: "**{district}** మరియు **{season}** ఆధారంగా, సిఫార్సు చేయబడిన ఉత్తమ-సరిపోయే పంట **{bestCrop}**.",
+                msgBestCropRecBody: "మీరు ఇప్పటికీ మీ **{crop}** ఎంపికతో కొనసాగవచ్చు, కానీ అంచనా తక్కువగా ఉండవచ్చు.",
+                msgCriticalRecTitle: "⚠️ తక్షణ చర్య సిఫార్సు చేయబడింది",
+                msgCriticalRecIntro: "కింది పరిష్కరించబడని నిర్వహణ పద్ధతుల ఆధారంగా మీ దిగుబడి అంచనా పెనాల్టీ విధించబడుతుంది. భవిష్యత్ పంటల కోసం వీటిని దయచేసి పరిష్కరించండి:",
+                msgRecFertilizer: "**ఎరువు:** దయచేసి నేల పరీక్ష చేయండి. ఫలితాలు వచ్చే వరకు, సాధారణ పంట అవసరాల ఆధారంగా {fertilizerRec} ఉపయోగించాలని మేము సిఫార్సు చేస్తున్నాము.",
+                msgRecSeedQuality: "**విత్తన నాణ్యత:** మెరుగైన మొలకెత్తడం మరియు మంచి దిగుబడి కోసం దయచేసి విత్తన నాణ్యత పరీక్ష చేయండి.",
+                msgRecPreEmergence: "**ముందుగా మొలవడం:** సమర్థవంతమైన ప్రారంభ కలుపు నియంత్రణ కోసం దయచేసి ముందుగా మొలిచే కలుపు సంహారిణిని పిచికారీ చేయండి.",
+                msgRecWeedMgmt: "**కలుపు నిర్వహణ:** మెరుగైన దిగుబడి కోసం సరైన సమయంలో కలుపు సంహారిణిని పిచికారీ చేయండి.",
+                msgRecPestMgmt: "**తెగులు నిర్వహణ:** మీ పంటను నష్టం నుండి రక్షించడానికి దయచేసి పురుగుమందులను పిచికారీ చేయండి.",
+                msgRecSeedRate: "**విత్తన రేటు:** **{crop}** కి సరైన విత్తన రేటు సుమారు **{rate}**. సమస్యలను నివారించడానికి మీ రేటును ధృవీకరించండి.",
+            },
+        };
+
+        // --- Translation Logic ---
+        function getTranslation(key, placeholders = {}) {
+            const template = translations[currentLangKey][key] || translations['en'][key];
+            if (!template) return `[Missing:${key}]`;
+
+            let message = template;
+            for (const [placeholder, value] of Object.entries(placeholders)) {
+                // Ensure placeholder key is wrapped in {}
+                const regex = new RegExp(`{${placeholder}}`, 'g');
+                message = message.replace(regex, value);
+            }
+            return message;
+        }
+
+        function translateUI(langKey) {
+            currentLangKey = langKey;
+            const elements = document.querySelectorAll('[data-i18n-key]');
+            
+            // 1. Translate all elements with data-i18n-key
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n-key');
+                if (key) {
+                    const text = getTranslation(key);
+                    // Check if it's an input or button value
+                    if (el.tagName === 'INPUT' && el.type === 'radio') {
+                        // Radio button text is handled by the sibling <span>
+                    } else if (el.tagName === 'BUTTON' || el.tagName === 'OPTION' || el.tagName === 'P' || el.tagName === 'H1' || el.tagName === 'H2' || el.tagName === 'H3' || el.tagName === 'LABEL') {
+                        el.innerHTML = text;
+                    } else if (el.tagName === 'TITLE') {
+                        document.title = text;
+                    } else if (el.tagName === 'SPAN' && el.closest('label')) {
+                         el.textContent = text;
+                    }
+                    else {
+                        el.textContent = text;
+                    }
+                }
+            });
+
+            // 2. Translate specific elements without data-i18n-key (like Yes/No radio spans)
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                const parentLabel = radio.closest('label');
+                const span = parentLabel?.querySelector('span');
+                if (span) {
+                    if (radio.value === 'Yes') {
+                        span.textContent = getTranslation('optYes');
+                    } else if (radio.value === 'No') {
+                        span.textContent = getTranslation('optNo');
+                    }
+                }
+            });
+            
+            // 3. Translate select options dynamically for rainfall
+            const rainfallSelect = document.getElementById('rainfall');
+            if (rainfallSelect) {
+                Array.from(rainfallSelect.options).forEach(option => {
+                    const value = option.value;
+                    if (value === 'Less') option.textContent = getTranslation('optLess');
+                    else if (value === 'Moderate') option.textContent = getTranslation('optModerate');
+                    else if (value === 'High') option.textContent = getTranslation('optHigh');
+                });
+            }
+        }
+
+        // --- Voice Assistant (Speech Synthesis) ---
+        function speakPrompt() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const synth = window.speechSynthesis;
+
+                // Prompts in the three languages
+                const prompts = [
+                    { lang: 'en-US', text: "Welcome! Please select your preferred language using the buttons below." },
+                    { lang: 'kn-IN', text: "ಸ್ವಾಗತ! ದಯವಿಟ್ಟು ಕೆಳಗಿನ ಬಟನ್‌ಗಳನ್ನು ಬಳಸಿ ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ." },
+                    { lang: 'te-IN', text: "స్వాగతం! దయచేసి క్రింది బటన్లను ఉపయోగించి మీ భాషను ఎంచుకోండి." }
+                ];
+
+                // Function to chain the speeches
+                function chainSpeech(index) {
+                    if (index >= prompts.length) return;
+
+                    const p = prompts[index];
+                    const utterance = new SpeechSynthesisUtterance(p.text);
+                    utterance.lang = p.lang;
+
+                    utterance.onend = () => chainSpeech(index + 1);
+                    synth.speak(utterance);
+                }
+                
+                chainSpeech(0); // Start the chain
+            } else {
+                console.log("Speech Synthesis not supported in this browser/environment.");
+            }
+        }
+        
+        // --- Initial Start Logic (to enable voice) ---
+        function startApp() {
+            document.getElementById('start-modal-backdrop').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            translateUI('en'); // Initialize UI to English
+            speakPrompt(); // This call is now safe after user interaction
+            updateStepUI(1);
+        }
+
+        // --- General Utility Functions ---
+        function showModal(titleKey, message, isBestCrop = false) {
+            document.getElementById('modal-title').textContent = titleKey;
+            
+            // Conditional coloring for the Best Crop alert
+            document.getElementById('modal-title').classList.toggle('text-primary-green', !isBestCrop);
+            document.getElementById('modal-title').classList.toggle('text-secondary-gold', isBestCrop);
+
+            document.getElementById('modal-message').innerHTML = message;
+            document.getElementById('btn-modal-ack').textContent = getTranslation('modalButtonAcknowledge');
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const content = document.getElementById('modal-content');
+            backdrop.classList.remove('hidden');
+            
+            // Animate in
+            setTimeout(() => {
+                backdrop.classList.add('opacity-100');
+                content.classList.add('scale-100');
+                content.classList.remove('scale-90');
+            }, 10);
+        }
+
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const content = document.getElementById('modal-content');
+            // Animate out
+            content.classList.remove('scale-100');
+            content.classList.add('scale-90');
+            backdrop.classList.remove('opacity-100');
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 300);
+        }
+
+        function updateStepUI(newStep) {
+            STEPS.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (index + 1 === newStep) {
+                    element.classList.remove('hidden');
+                    element.style.transform = 'translateX(0)';
+                    element.style.opacity = '1';
+                } else {
+                    element.style.transform = 'translateX(100%)';
+                    element.style.opacity = '0';
+                    setTimeout(() => {
+                        element.classList.add('hidden');
+                    }, 500); // Wait for transition to finish
+                }
+            });
+            currentStep = newStep;
+        }
+
+        // --- Step 1 Logic ---
+        function selectLanguage(langKey) {
+            // Apply new language to the UI
+            translateUI(langKey);
+            
+            const langMap = { en: 'English', kn: 'ಕನ್ನಡ', te: 'తెలుగు' };
+            const langName = langMap[langKey] || 'English';
+
+            const modalMessage = {
+                en: `You have selected **${langName}**. Click acknowledge to proceed to farm details input.`,
+                kn: `ನೀವು **ಕನ್ನಡ** ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿರುವಿರಿ. ಮುಂದುವರಿಯಲು ಒಪ್ಪಿಕೊಳ್ಳಿ.`,
+                te: `మీరు **తెలుగు** భాషను ఎంచుకున్నారు. కొనసాగడానికి అంగీకరించండి.`,
+            }[langKey];
+
+            showModal(getTranslation('modalTitleRecommendation'), modalMessage);
+            updateStepUI(2);
+        }
+
+        // --- Step 2 Logic & Crop Recommendation ---
+        async function nextStep(step) {
+            if (step === 2) {
+                const district = document.getElementById('district').value;
+                const season = document.getElementById('season').value;
+                const crop = document.getElementById('crop').value;
+
+                if (!district || !season || !crop) {
+                    showModal(getTranslation('modalTitleRecommendation'), getTranslation('msgInputError'));
+                    return;
+                }
+
+                // **Best Crop Recommendation (Pop-up)**
+                let bestCrop = null;
+                if (district === 'Mandya' && season === 'Kharif') {
+                    bestCrop = 'Sugarcane';
+                } else if (district === 'Chikmagalur' && season === 'Rabi') {
+                    bestCrop = 'Coffee';
+                } else if (district === 'Kalaburagi' && season === 'Kharif') {
+                    bestCrop = 'Pigeon Pea (Tur/Red Gram)';
+                }
+
+                if (bestCrop && bestCrop !== crop) {
+                    const recIntro = getTranslation('msgBestCropRecIntro', { district, season, bestCrop });
+                    const recBody = getTranslation('msgBestCropRecBody', { crop });
+
+                    showModal(
+                        getTranslation('modalTitleRecommendation'),
+                        `💡 **${recIntro}** <br><br>${recBody}`,
+                        true
+                    );
+                }
+
+                updateStepUI(3);
+            } else if (step === 3) {
+                // **Conditional Recommendations (Modal Pop-up)**
+
+                // Check for required inputs
+                const soilTest = document.querySelector('input[name="soilTest"]:checked')?.value;
+                const seedTest = document.querySelector('input[name="seedTest"]:checked')?.value;
+                const preEmergence = document.querySelector('input[name="preEmergence"]:checked')?.value;
+                const weedMgmt = document.querySelector('input[name="weedMgmt"]:checked')?.value;
+                const pestMgmt = document.querySelector('input[name="pestMgmt"]:checked')?.value;
+                const seedRate = document.querySelector('input[name="seedRate"]:checked')?.value;
+                const rainfallLevel = document.getElementById('rainfall').value;
+                const crop = document.getElementById('crop').value;
+
+                if (!soilTest || !seedTest || !preEmergence || !weedMgmt || !pestMgmt || !seedRate || !rainfallLevel) {
+                    showModal(getTranslation('modalTitleRecommendation'), getTranslation('msgInputError'));
+                    return;
+                }
+
+                let recommendations = [];
+
+                // 1. Soil Test Recommendation (Find S Algorithm concept: If No, give specific fertilizer rec)
+                if (soilTest === 'No') {
+                    let fertilizerRec = {
+                        en: 'a balanced NPK fertilizer (e.g., 10:26:26) based on general crop needs.',
+                        kn: 'ಸಾಮಾನ್ಯ ಬೆಳೆ ಅಗತ್ಯಗಳ ಆಧಾರದ ಮೇಲೆ ಸಮತೋಲಿತ NPK ಗೊಬ್ಬರವನ್ನು (ಉದಾ. 10:26:26).',
+                        te: 'సాధారణ పంట అవసరాల ఆధారంగా సమతుల్య NPK ఎరువును (ఉదా. 10:26:26).',
+                    }[currentLangKey];
+                    
+                    if (crop.includes('Rice')) fertilizerRec = { en: 'Urea and MOP based on standard recommendations for Paddy.', kn: 'ಭತ್ತಕ್ಕೆ ಪ್ರಮಾಣಿತ ಶಿಫಾರಸುಗಳ ಆಧಾರದ ಮೇಲೆ ಯೂರಿಯಾ ಮತ್ತು ಎಂಒಪಿ.', te: 'వరికి ప్రామాణిక సిఫార్సుల ఆధారంగా యూరియా మరియు ఎంఓపి.' }[currentLangKey];
+                    else if (crop.includes('Sugarcane')) fertilizerRec = { en: 'a higher dose of Potash (K) for sugar development.', kn: 'ಸಕ್ಕರೆ ಅಭಿವೃದ್ಧಿಗಾಗಿ ಹೆಚ್ಚಿನ ಪ್ರಮಾಣದ ಪೊಟ್ಯಾಷ್ (ಕೆ).', te: 'చక్కెర అభివృద్ధి కోసం ఎక్కువ మోతాదులో పొటాష్ (K).' }[currentLangKey];
+
+                    recommendations.push(getTranslation('msgRecFertilizer', { fertilizerRec }));
+                }
+
+                // 2. Seed Quality
+                if (seedTest === 'No') {
+                    recommendations.push(getTranslation('msgRecSeedQuality'));
+                }
+
+                // 3. Pre-emergence
+                if (preEmergence === 'No') {
+                    recommendations.push(getTranslation('msgRecPreEmergence'));
+                }
+
+                // 4. Weed Management
+                if (weedMgmt === 'No') {
+                    recommendations.push(getTranslation('msgRecWeedMgmt'));
+                }
+
+                // 5. Pest Management
+                if (pestMgmt === 'No') {
+                    recommendations.push(getTranslation('msgRecPestMgmt'));
+                }
+
+                // 6. Seed Rate Recommendation
+                if (seedRate === 'No') {
+                    let rate = '15 kg/acre';
+                    if (crop.includes('Rice')) rate = '20 kg/acre (for transplanting)';
+                    else if (crop.includes('Maize')) rate = '8 kg/acre';
+                    else if (crop.includes('Sugarcane')) rate = '25,000 setts/acre';
+
+                    recommendations.push(getTranslation('msgRecSeedRate', { crop, rate }));
+                }
+
+                if (recommendations.length > 0) {
+                    const recMessage = `<h3>${getTranslation('msgCriticalRecTitle')}</h3>
+                                       <p class="mb-3">${getTranslation('msgCriticalRecIntro')}</p>` +
+                                       '<ul class="list-disc list-inside space-y-2 mt-4 pl-2 text-left">' +
+                                       recommendations.map(r => `<li class="font-medium text-red-700">${r}</li>`).join('') +
+                                       '</ul>';
+                    showModal(getTranslation('modalTitleRecommendation'), recMessage);
+                } else {
+                    showModal(getTranslation('modalTitleRecommendation'), getTranslation('msgOptimalManagement'));
+                }
+
+                // Proceed to prediction
+                updateStepUI(4);
+                predictYield();
+            }
+        }
+
+        // --- Rainfall Info Display ---
+        function showRainfallInfo() {
+            const crop = document.getElementById('crop').value;
+            const rainfallLevel = document.getElementById('rainfall').value;
+            const infoEl = document.getElementById('rec-rainfall');
+
+            if (!crop || !rainfallLevel) {
+                infoEl.classList.add('hidden');
+                return;
+            }
+
+            let requiredRainfall = 'N/A';
+            let message = '';
+
+            switch (crop) {
+                case 'Rice (Paddy)': requiredRainfall = '900-1200 mm'; break;
+                case 'Sugarcane': requiredRainfall = '1100-1500 mm'; break;
+                case 'Maize': requiredRainfall = '500-800 mm'; break;
+                case 'Coffee': requiredRainfall = '1500-2500 mm'; break;
+                default: requiredRainfall = '600-900 mm';
+            }
+
+            const requiredText = {
+                en: `The required average seasonal rainfall for **${crop}** is **${requiredRainfall}**.`,
+                kn: `**${crop}** ಗೆ ಅಗತ್ಯವಿರುವ ಸರಾಸರಿ ಕಾಲೋಚಿತ ಮಳೆಯು **${requiredRainfall}** ಆಗಿದೆ.`,
+                te: `**${crop}** కి అవసరమైన సగటు సీజనల్ వర్షపాతం **${requiredRainfall}** .`,
+            }[currentLangKey];
+            message = requiredText;
+
+
+            if (rainfallLevel === 'Less') {
+                 message += {
+                    en: ` **Warning:** Low rainfall will negatively impact the yield unless compensated by irrigation.`,
+                    kn: ` **ಎಚ್ಚರಿಕೆ:** ನೀರಾವರಿ ಮೂಲಕ ಸರಿದೂಗಿಸದ ಹೊರತು ಕಡಿಮೆ ಮಳೆಯು ಇಳುವರಿಯ ಮೇಲೆ ಋಣಾತ್ಮಕ ಪರಿಣಾಮ ಬೀರುತ್ತದೆ.`,
+                    te: ` **హెచ్చరిక:** నీటిపారుదల ద్వారా భర్తీ చేయకపోతే తక్కువ వర్షపాతం దిగుబడిపై ప్రతికూల ప్రభావం చూపుతుంది.`,
+                }[currentLangKey];
+            } else if (rainfallLevel === 'High') {
+                 message += {
+                    en: ` **Warning:** High rainfall increases the risk of waterlogging and fungal diseases.`,
+                    kn: ` **ಎಚ್ಚರಿಕೆ:** ಹೆಚ್ಚಿನ ಮಳೆಯು ನೀರಿನ ನಿಶ್ಚಲತೆ ಮತ್ತು ಶಿಲೀಂಧ್ರ ರೋಗಗಳ ಅಪಾಯವನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ.`,
+                    te: ` **హెచ్చరిక:** అధిక వర్షపాతం నీటి నిలువ మరియు శిలీంధ్ర వ్యాధుల ప్రమాదాన్ని పెంచుతుంది.`,
+                }[currentLangKey];
+            } else {
+                 message += {
+                    en: ` This is a **Moderate** level, generally suitable.`,
+                    kn: ` ಇದು ಸಾಮಾನ್ಯವಾಗಿ ಸೂಕ್ತವಾದ **ಮಧ್ಯಮ** ಮಟ್ಟವಾಗಿದೆ.`,
+                    te: ` ఇది సాధారణంగా సరిపోయే **మితమైన** స్థాయి.`,
+                }[currentLangKey];
+            }
+
+            infoEl.innerHTML = message;
+            infoEl.classList.remove('hidden');
+        }
+
+        // --- Step 4 & 5 Logic: Prediction and Visual Feedback ---
+        function predictYield() {
+            const crop = document.getElementById('crop').value;
+            const rainfallLevel = document.getElementById('rainfall').value;
+            const resultDiv = document.getElementById('prediction-result');
+            
+            // Base yield for a generic crop in Quintals/Acre (or Tonnes for Sugarcane)
+            let baseYield = 45; 
+
+            // 1. Base Yield adjustment by crop (Placeholder values)
+            if (crop.includes('Rice')) baseYield = 60;
+            else if (crop.includes('Sugarcane')) baseYield = 300; // in tonnes/acre
+            else if (crop.includes('Coffee')) baseYield = 8;
+            else if (crop.includes('Maize')) baseYield = 40;
+
+            // 2. Management Factor (Penalty for each 'No' answer)
+            let managementFactor = 1.0;
+            const inputs = {
+                soilTest: document.querySelector('input[name="soilTest"]:checked')?.value,
+                seedTest: document.querySelector('input[name="seedTest"]:checked')?.value,
+                preEmergence: document.querySelector('input[name="preEmergence"]:checked')?.value,
+                weedMgmt: document.querySelector('input[name="weedMgmt"]:checked')?.value,
+                pestMgmt: document.querySelector('input[name="pestMgmt"]:checked')?.value,
+                seedRate: document.querySelector('input[name="seedRate"]:checked')?.value,
+            };
+
+            for (const key in inputs) {
+                if (inputs[key] === 'No') {
+                    managementFactor -= 0.08; // 8% penalty for each 'No'
+                }
+            }
+
+            // 3. Rainfall Factor
+            let rainfallFactor = 1.0;
+            if (rainfallLevel === 'Less') rainfallFactor = 0.8; // 20% penalty
+            else if (rainfallLevel === 'High') rainfallFactor = 0.9; // 10% penalty
+
+            // Final Prediction
+            let predictedYield = Math.round(baseYield * managementFactor * rainfallFactor);
+            predictedYield = Math.max(1, predictedYield); // Ensure yield is at least 1
+
+            // Determine Feedback
+            const maxPotential = baseYield;
+            let feedback = '';
+            let emoji = '';
+            let bgColor = '';
+            let yieldUnitKey = (crop === 'Sugarcane') ? 'msgYieldUnitTonne' : 'msgYieldUnitQuintal';
+            let yieldUnit = getTranslation(yieldUnitKey);
+
+
+            // Step 5: Colorful Page & Emoji Feedback
+            if (predictedYield >= maxPotential * 0.9) {
+                feedback = {
+                    en: `Excellent! Your predicted yield is **${predictedYield} ${yieldUnit}**. All management practices seem optimal.`,
+                    kn: `ಅತ್ಯುತ್ತಮ! ನಿಮ್ಮ ಭವಿಷ್ಯದ ಇಳುವರಿ **${predictedYield} ${yieldUnit}** ಆಗಿದೆ. ಎಲ್ಲಾ ನಿರ್ವಹಣಾ ಅಭ್ಯಾಸಗಳು ಸೂಕ್ತವಾಗಿವೆ.`,
+                    te: `అద్భుతమైనది! మీ అంచనా వేసిన దిగుబడి **${predictedYield} ${yieldUnit}**. అన్ని నిర్వహణ పద్ధతులు సరైనవిగా కనిపిస్తున్నాయి.`,
+                }[currentLangKey];
+                emoji = '🎉😄';
+                bgColor = 'bg-green-100 border-4 border-green-500 text-green-800';
+            } else if (predictedYield >= maxPotential * 0.7) {
+                feedback = {
+                    en: `Good Yield! Your predicted yield is **${predictedYield} ${yieldUnit}**. A few adjustments in management could push this higher.`,
+                    kn: `ಉತ್ತಮ ಇಳುವರಿ! ನಿಮ್ಮ ಭವಿಷ್ಯದ ಇಳುವರಿ **${predictedYield} ${yieldUnit}** ಆಗಿದೆ. ನಿರ್ವಹಣೆಯಲ್ಲಿ ಕೆಲವು ಹೊಂದಾಣಿಕೆಗಳು ಇದನ್ನು ಹೆಚ್ಚಿಸಬಹುದು.`,
+                    te: `మంచి దిగుబడి! మీ అంచనా వేసిన దిగుబడి **${predictedYield} ${yieldUnit}**. నిర్వహణలో కొన్ని సర్దుబాట్లు దీనిని పెంచగలవు.`,
+                }[currentLangKey];
+                emoji = '🙂👍';
+                bgColor = 'bg-yellow-100 border-4 border-yellow-500 text-yellow-800';
+            } else {
+                feedback = {
+                    en: `Lower Yield Expected. Your predicted yield is **${predictedYield} ${yieldUnit}**. We strongly recommend reviewing the critical management practices to improve future results.`,
+                    kn: `ಕಡಿಮೆ ಇಳುವರಿ ನಿರೀಕ್ಷಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಭವಿಷ್ಯದ ಇಳುವರಿ **${predictedYield} ${yieldUnit}** ಆಗಿದೆ. ಭವಿಷ್ಯದ ಫಲಿತಾಂಶಗಳನ್ನು ಸುಧಾರಿಸಲು ನಿರ್ಣಾಯಕ ನಿರ್ವಹಣಾ ಅಭ್ಯಾಸಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ನಾವು ಬಲವಾಗಿ ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.`,
+                    te: `తక్కువ దిగుబడి అంచనా. మీ అంచనా వేసిన దిగుబడి **${predictedYield} ${yieldUnit}**. భవిష్యత్ ఫలితాలను మెరుగుపరచడానికి క్లిష్టమైన నిర్వహణ పద్ధతులను సమీక్షించమని మేము గట్టిగా సిఫార్సు చేస్తున్నాము.`,
+                }[currentLangKey];
+                emoji = '😟📉';
+                bgColor = 'bg-red-100 border-4 border-red-500 text-red-800';
+            }
+
+            const maxPotentialMessage = {
+                en: `The maximum potential for this crop is around ${maxPotential} ${yieldUnit} under ideal conditions.`,
+                kn: `ಆದರ್ಶ ಪರಿಸ್ಥಿತಿಗಳಲ್ಲಿ ಈ ಬೆಳೆಗೆ ಗರಿಷ್ಠ ಸಾಮರ್ಥ್ಯವು ಸುಮಾರು ${maxPotential} ${yieldUnit} ಆಗಿದೆ.`,
+                te: `ఆదర్శ పరిస్థితులలో ఈ పంటకు గరిష్ట సామర్థ్యం సుమారు ${maxPotential} ${yieldUnit} .`,
+            }[currentLangKey];
+
+            // Display result
+            resultDiv.className = `text-center p-8 rounded-xl shadow-2xl transition duration-500 ${bgColor}`;
+            resultDiv.innerHTML = `
+                <div class="text-6xl mb-4">${emoji}</div>
+                <h3 class="text-3xl font-extrabold mb-4">${getTranslation('btnPredictYield')}: ${predictedYield} ${yieldUnit}</h3>
+                <p class="text-lg font-medium">${feedback}</p>
+                <p class="text-sm mt-4 text-gray-600">${maxPotentialMessage}</p>
+            `;
+        }
+
+        function resetApp() {
+            // Reset all form inputs
+            document.getElementById('district').value = '';
+            document.getElementById('season').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('crop').value = '';
+            document.getElementById('rainfall').value = '';
+
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            document.getElementById('rec-rainfall').classList.add('hidden');
+
+            // Go back to the Start screen
+            document.getElementById('app-container').classList.add('hidden');
+            document.getElementById('start-modal-backdrop').classList.remove('hidden');
+            // Reset UI language back to default English for the start screen
+            currentLangKey = 'en'; 
+            translateUI('en');
+        }
+    </script>
+
+</body>
+</html>
