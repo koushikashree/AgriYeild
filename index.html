@@ -44,7 +44,7 @@
     <div id="start-modal-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl p-8 max-w-sm w-full card text-center transform scale-100 transition duration-300">
             <h3 data-i18n-key="startModalTitle" class="text-2xl font-extrabold mb-4 text-primary-green">Welcome to AgriYield Predictor</h3>
-            <p data-i18n-key="startModalMessage" class="text-gray-700 mb-6">Click **Start** to enable the voice assistant and begin the selection process for your farm details.</p>
+            <p data-i18n-key="startModalMessage" class="text-gray-700 mb-6">Click **Start** to begin the selection process for your farm details.</p>
             <button onclick="startApp()" data-i18n-key="startModalButton" class="w-full py-3 px-4 bg-primary-green text-white font-bold rounded-lg hover:bg-emerald-600 transition duration-150 shadow-lg">
                 Start
             </button>
@@ -65,14 +65,11 @@
             <!-- STEP 1: Language Selection -->
             <!-- =========================== -->
             <div id="step-1" class="step-container hidden">
-                <h2 id="step1-title" class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2" data-i18n-key="step1Title">Step 1: Language Selection</h2>
+                <h2 id="step1-title" class="text-2xl font-semibold text-gray-800 mb-2 border-b pb-2">Step 1: Language Selection / भाषा चयन / ಭಾಷಾ ಆಯ್ಕೆ / భాషా ఎంపిక</h2>
 
                 <div id="voice-message" class="text-center mb-6 p-4 bg-blue-100 border border-blue-200 rounded-lg text-blue-800">
                     <p data-i18n-key="voicePrompt" class="font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 -mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                        </svg>
-                        Voice Assistant is active. Please select the language!
+                        Please select your preferred language to continue.
                     </p>
                 </div>
 
@@ -82,6 +79,9 @@
                     </button>
                     <button onclick="selectLanguage('kn')" class="w-full py-3 px-4 bg-secondary-gold text-white font-bold rounded-lg hover:bg-yellow-600 transition duration-150">
                         ಕನ್ನಡ (Kannada)
+                    </button>
+                    <button onclick="selectLanguage('hi')" class="w-full py-3 px-4 bg-pink-500 text-white font-bold rounded-lg hover:bg-pink-600 transition duration-150">
+                        हिन्दी (Hindi)
                     </button>
                     <button onclick="selectLanguage('te')" class="w-full py-3 px-4 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-600 transition duration-150">
                         తెలుగు (Telugu)
@@ -282,10 +282,10 @@
                 appTitle: "🌾 AgriYield Predictor",
                 appSubtitle: "Karnataka State Yield Forecasting",
                 startModalTitle: "Welcome to AgriYield Predictor",
-                startModalMessage: "Click **Start** to enable the voice assistant and begin the selection process for your farm details.",
+                startModalMessage: "Click **Start** to begin the selection process for your farm details.",
                 startModalButton: "Start",
                 step1Title: "Step 1: Language Selection",
-                voicePrompt: "Voice Assistant is active. Please select the language!",
+                voicePrompt: "Please select your preferred language to continue.",
                 step2Title: "Step 2: Enter Farm Details",
                 labelDistrict: "District Selection",
                 selectDistrictPlaceholder: "-- Select District --",
@@ -335,10 +335,10 @@
                 appTitle: "🌾 ಕೃಷಿ ಇಳುವರಿ ಭವಿಷ್ಯ",
                 appSubtitle: "ಕರ್ನಾಟಕ ರಾಜ್ಯದ ಇಳುವರಿ ಮುನ್ಸೂಚನೆ",
                 startModalTitle: "ಕೃಷಿ ಇಳುವರಿ ಭವಿಷ್ಯಕ್ಕೆ ಸುಸ್ವಾಗತ",
-                startModalMessage: "ಧ್ವನಿ ಸಹಾಯಕವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಮತ್ತು ನಿಮ್ಮ ಕೃಷಿ ವಿವರಗಳ ಆಯ್ಕೆ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು **ಪ್ರಾರಂಭಿಸಿ** ಕ್ಲಿಕ್ ಮಾಡಿ.",
+                startModalMessage: "ನಿಮ್ಮ ಕೃಷಿ ವಿವರಗಳ ಆಯ್ಕೆ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು **ಪ್ರಾರಂಭಿಸಿ** ಕ್ಲಿಕ್ ಮಾಡಿ.",
                 startModalButton: "ಪ್ರಾರಂಭಿಸಿ",
                 step1Title: "ಹಂತ 1: ಭಾಷಾ ಆಯ್ಕೆ",
-                voicePrompt: "ಧ್ವನಿ ಸಹಾಯಕ ಸಕ್ರಿಯವಾಗಿದೆ. ದಯವಿಟ್ಟು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ!",
+                voicePrompt: "ಮುಂದುವರಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬಯಸಿದ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
                 step2Title: "ಹಂತ 2: ಕೃಷಿ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ",
                 labelDistrict: "ಜಿಲ್ಲಾ ಆಯ್ಕೆ",
                 selectDistrictPlaceholder: "-- ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ --",
@@ -384,14 +384,67 @@
                 msgRecPestMgmt: "**ಕೀಟ ನಿರ್ವಹಣೆ:** ನಿಮ್ಮ ಬೆಳೆಯನ್ನು ಹಾನಿಯಿಂದ ರಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ಕೀಟನಾಶಕಗಳನ್ನು ಸಿಂಪಡಿಸಿ.",
                 msgRecSeedRate: "**ಬೀಜದ ದರ:** **{crop}** ಗೆ ಸೂಕ್ತವಾದ ಬೀಜದ ದರವು ಸರಿಸುಮಾರು **{rate}** ಆಗಿದೆ. ಸಮಸ್ಯೆಗಳನ್ನು ತಡೆಯಲು ನಿಮ್ಮ ದರವನ್ನು ದೃಢೀಕರಿಸಿ.",
             },
+            hi: {
+                appTitle: "🌾 कृषि उपज भविष्यवक्ता",
+                appSubtitle: "कर्नाटक राज्य उपज पूर्वानुमान",
+                startModalTitle: "कृषि उपज भविष्यवक्ता में आपका स्वागत है",
+                startModalMessage: "अपने खेत के विवरण चयन की प्रक्रिया शुरू करने के लिए **स्टार्ट** पर क्लिक करें।",
+                startModalButton: "स्टार्ट",
+                step1Title: "चरण 1: भाषा चयन",
+                voicePrompt: "कृपया जारी रखने के लिए अपनी पसंदीदा भाषा चुनें।",
+                step2Title: "चरण 2: खेत का विवरण दर्ज करें",
+                labelDistrict: "जिला चयन",
+                selectDistrictPlaceholder: "-- जिला चुनें --",
+                labelSeason: "ऋतु",
+                selectSeasonPlaceholder: "-- ऋतु चुनें --",
+                labelYear: "वर्ष",
+                selectYearPlaceholder: "-- वर्ष चुनें --",
+                labelCrop: "फसल",
+                selectCropPlaceholder: "-- फसल चुनें --",
+                btnNextManagement: "आगे: प्रबंधन इनपुट",
+                step3Title: "चरण 3: कृषि प्रबंधन चेकलिस्ट",
+                qSoilTest: "मृदा उर्वरता परीक्षण किया गया? (Find-S एल्गोरिद्म इनपुट)",
+                qSeedTest: "बीज गुणवत्ता परीक्षण किया गया?",
+                qPreEmergence: "प्री-एमर्जेंस खरपतवारनाशी का छिड़काव किया?",
+                labelRainfall: "ऋतु के दौरान देखा गया वर्षा स्तर",
+                selectRainfallPlaceholder: "-- स्तर चुनें --",
+                optLess: "कम",
+                optModerate: "मध्यम",
+                optHigh: "अधिक",
+                qWeedMgmt: "प्रभावी खरपतवार प्रबंधन किया गया?",
+                qPestMgmt: "प्रभावी कीट प्रबंधन किया गया?",
+                qSeedRate: "बीज दर (बीज प्रति एकड़) जांची और सही है?",
+                btnPredictYield: "उपज का पूर्वानुमान",
+                step4Title: "चरण 4: उपज पूर्वानुमान",
+                btnReset: "नया पूर्वानुमान शुरू करें",
+                optYes: "हाँ",
+                optNo: "नहीं",
+                modalTitleRecommendation: "सिफारिश",
+                modalButtonAcknowledge: "स्वीकार करें",
+                // Dynamic Message Templates
+                msgInputError: "कृपया आगे बढ़ने से पहले कृषि प्रबंधन चेकलिस्ट के सभी प्रश्नों के उत्तर दें।",
+                msgYieldUnitQuintal: "क्विंटल/एकड़",
+                msgYieldUnitTonne: "टन/एकड़",
+                msgOptimalManagement: "बहुत बढ़िया! सभी प्रबंधन प्रथाओं को 'हाँ' चयनित किया गया है। यह उच्च उपज की मजबूत संभावना दर्शाता है!",
+                msgBestCropRecIntro: "**{district}** और **{season}** के आधार पर, अनुशंसित सर्वोत्तम अनुकूल फसल **{bestCrop}** है।",
+                msgBestCropRecBody: "आप अपनी **{crop}** पसंद के साथ जारी रख सकते हैं, लेकिन पूर्वानुमान कम हो सकता है।",
+                msgCriticalRecTitle: "⚠️ तत्काल कार्रवाई की सिफारिश",
+                msgCriticalRecIntro: "निम्नलिखित अनसुलझी प्रबंधन प्रथाओं के आधार पर आपकी उपज का पूर्वानुमान दंडित किया जाएगा। भविष्य की फसलों के लिए कृपया इन्हें संबोधित करें:",
+                msgRecFertilizer: "**उर्वरक:** कृपया मृदा परीक्षण करें। परिणाम आने तक, हम {fertilizerRec} उपयोग करने की सलाह देते हैं।",
+                msgRecSeedQuality: "**बीज गुणवत्ता:** बेहतर अंकुरण और बेहतर उपज के लिए कृपया बीज गुणवत्ता परीक्षण करें।",
+                msgRecPreEmergence: "**प्री-एमर्जेंस:** प्रभावी प्रारंभिक खरपतवार नियंत्रण के लिए कृपया प्री-एमर्जेंस खरपतवारनाशी का छिड़काव करें।",
+                msgRecWeedMgmt: "**खरपतवार प्रबंधन:** बेहतर उपज के लिए उचित समय पर खरपतवारनाशी का छिड़काव करें।",
+                msgRecPestMgmt: "**कीट प्रबंधन:** अपनी फसल को नुकसान से बचाने के लिए कृपया कीटनाशकों का छिड़काव करें।",
+                msgRecSeedRate: "**बीज दर:** **{crop}** के लिए उचित बीज दर लगभग **{rate}** है। समस्याओं से बचने के लिए अपनी दर सत्यापित करें।",
+            },
             te: {
                 appTitle: "🌾 వ్యవసాయ దిగుబడి అంచనా",
                 appSubtitle: "కర్ణాటక రాష్ట్ర దిగుబడి అంచనా",
                 startModalTitle: "వ్యవసాయ దిగుబడి అంచనాకు స్వాగతం",
-                startModalMessage: "వాయిస్ అసిస్టెంట్‌ను ప్రారంభించడానికి మరియు మీ వ్యవసాయ వివరాల ఎంపిక ప్రక్రియను ప్రారంభించడానికి **ప్రారంభించు** క్లిక్ చేయండి.",
+                startModalMessage: "మీ వ్యవసాయ వివరాల ఎంపిక ప్రక్రియను ప్రారంభించడానికి **ప్రారంభించు** క్లిక్ చేయండి.",
                 startModalButton: "ప్రారంభించు",
                 step1Title: "దశ 1: భాషా ఎంపిక",
-                voicePrompt: "వాయిస్ అసిస్టెంట్ చురుకుగా ఉంది. దయచేసి భాషను ఎంచుకోండి!",
+                voicePrompt: "దయచేసి కొనసాగడానికి మీ ఇష్టమైన భాషను ఎంచుకోండి.",
                 step2Title: "దశ 2: వ్యవసాయ వివరాలను నమోదు చేయండి",
                 labelDistrict: "జిల్లా ఎంపిక",
                 selectDistrictPlaceholder: "-- జిల్లాను ఎంచుకోండి --",
@@ -436,6 +489,85 @@
                 msgRecWeedMgmt: "**కలుపు నిర్వహణ:** మెరుగైన దిగుబడి కోసం సరైన సమయంలో కలుపు సంహారిణిని పిచికారీ చేయండి.",
                 msgRecPestMgmt: "**తెగులు నిర్వహణ:** మీ పంటను నష్టం నుండి రక్షించడానికి దయచేసి పురుగుమందులను పిచికారీ చేయండి.",
                 msgRecSeedRate: "**విత్తన రేటు:** **{crop}** కి సరైన విత్తన రేటు సుమారు **{rate}**. సమస్యలను నివారించడానికి మీ రేటును ధృవీకరించండి.",
+            },
+        };
+
+        // Canonical-to-localized names for select option labels
+        const districtNames = {
+            kn: {
+                'Bengaluru Urban': 'ಬೆಂಗಳೂರು ನಗರ',
+                'Mysuru': 'ಮೈಸೂರು',
+                'Mandya': 'ಮಂಡ್ಯ',
+                'Shivamogga': 'ಶಿವಮೊಗ್ಗ',
+                'Belagavi': 'ಬೆಳಗಾವಿ',
+                'Kalaburagi': 'ಕಲಬುರಗಿ',
+                'Dharwad': 'ಧಾರವಾಡ',
+                'Chikmagalur': 'ಚಿಕ್ಕಮಗಳೂರು',
+            },
+            hi: {
+                'Bengaluru Urban': 'बेंगलुरु शहरी',
+                'Mysuru': 'मैसूर',
+                'Mandya': 'मांड्या',
+                'Shivamogga': 'शिवमोग्गा',
+                'Belagavi': 'बेलगावी',
+                'Kalaburagi': 'कलबुर्गी',
+                'Dharwad': 'धारवाड़',
+                'Chikmagalur': 'चिकमगलूर',
+            },
+            te: {
+                'Bengaluru Urban': 'బెంగళూరు అర్బన్',
+                'Mysuru': 'మైసూరు',
+                'Mandya': 'మాండ్యా',
+                'Shivamogga': 'శివమొగ్గ',
+                'Belagavi': 'బేలగావి',
+                'Kalaburagi': 'కలబుర్గి',
+                'Dharwad': 'ధారవాడ',
+                'Chikmagalur': 'చిక్కమగళూరు',
+            },
+        };
+
+        const seasonNames = {
+            kn: { 'Kharif': 'ಖರೀಫ್ (ಮಳೆಗಾಲ)', 'Rabi': 'ರಬಿ (ಶೀತಕಾಲ)', 'Summer': 'ಬೇಸಿಗೆ' },
+            hi: { 'Kharif': 'खरीफ (मानसून)', 'Rabi': 'रबी (सर्दी)', 'Summer': 'गर्मी' },
+            te: { 'Kharif': 'ఖరీఫ్ (వర్షాకాలం)', 'Rabi': 'రబీ (శీతాకాలం)', 'Summer': 'వేసవి' },
+        };
+
+        const cropNames = {
+            kn: {
+                'Rice (Paddy)': 'ಅಕ್ಕಿ (ಭತ್ತ)',
+                'Maize': 'ಮೆಕ್ಕೆಜೋಳ',
+                'Finger Millet (Ragi)': 'ರಾಗಿ',
+                'Sorghum (Jowar)': 'ಜೋಳ',
+                'Pigeon Pea (Tur/Red Gram)': 'ತೊಗರಿಬೇಳೆ',
+                'Sugarcane': 'ಕಬ್ಬು',
+                'Groundnut': 'ಕಡಲೆ',
+                'Sunflower': 'ಸೂರ್ಯಕಾಂತಿ',
+                'Coffee': 'ಕಾಫಿ',
+                'Cotton': 'ಹತ್ತಿ',
+            },
+            hi: {
+                'Rice (Paddy)': 'चावल (धान)',
+                'Maize': 'मक्का',
+                'Finger Millet (Ragi)': 'रागी',
+                'Sorghum (Jowar)': 'ज्वार',
+                'Pigeon Pea (Tur/Red Gram)': 'तुर/अरहर',
+                'Sugarcane': 'गन्ना',
+                'Groundnut': 'मूंगफली',
+                'Sunflower': 'सूरजमुखी',
+                'Coffee': 'कॉफी',
+                'Cotton': 'कपास',
+            },
+            te: {
+                'Rice (Paddy)': 'వరి (బియ్యం)',
+                'Maize': 'మొక్కజొన్న',
+                'Finger Millet (Ragi)': 'రాగులు',
+                'Sorghum (Jowar)': 'జొన్న',
+                'Pigeon Pea (Tur/Red Gram)': 'తూర దాల్',
+                'Sugarcane': 'చెరకు',
+                'Groundnut': 'వరుసెనగ',
+                'Sunflower': 'సూర్యకాంతి',
+                'Coffee': 'కాఫీ',
+                'Cotton': 'పత్తి',
             },
         };
 
@@ -501,45 +633,32 @@
                     else if (value === 'High') option.textContent = getTranslation('optHigh');
                 });
             }
+
+            // 4. Translate District/Season/Crop option labels while keeping values stable in English
+            function translateSelectOptions(selectId, mapByLang, placeholderKey) {
+                const sel = document.getElementById(selectId);
+                if (!sel) return;
+                Array.from(sel.options).forEach(opt => {
+                    if (!opt.value) {
+                        if (placeholderKey) opt.textContent = getTranslation(placeholderKey);
+                        return;
+                    }
+                    const localized = (mapByLang[currentLangKey] && mapByLang[currentLangKey][opt.value]) || opt.value;
+                    opt.textContent = localized;
+                });
+            }
+            translateSelectOptions('district', districtNames, 'selectDistrictPlaceholder');
+            translateSelectOptions('season', seasonNames, 'selectSeasonPlaceholder');
+            translateSelectOptions('crop', cropNames, 'selectCropPlaceholder');
         }
 
         // --- Voice Assistant (Speech Synthesis) ---
-        function speakPrompt() {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const synth = window.speechSynthesis;
-
-                // Prompts in the three languages
-                const prompts = [
-                    { lang: 'en-US', text: "Welcome! Please select your preferred language using the buttons below." },
-                    { lang: 'kn-IN', text: "ಸ್ವಾಗತ! ದಯವಿಟ್ಟು ಕೆಳಗಿನ ಬಟನ್‌ಗಳನ್ನು ಬಳಸಿ ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ." },
-                    { lang: 'te-IN', text: "స్వాగతం! దయచేసి క్రింది బటన్లను ఉపయోగించి మీ భాషను ఎంచుకోండి." }
-                ];
-
-                // Function to chain the speeches
-                function chainSpeech(index) {
-                    if (index >= prompts.length) return;
-
-                    const p = prompts[index];
-                    const utterance = new SpeechSynthesisUtterance(p.text);
-                    utterance.lang = p.lang;
-
-                    utterance.onend = () => chainSpeech(index + 1);
-                    synth.speak(utterance);
-                }
-                
-                chainSpeech(0); // Start the chain
-            } else {
-                console.log("Speech Synthesis not supported in this browser/environment.");
-            }
-        }
+        // Voice assistant removed as requested
         
         // --- Initial Start Logic (to enable voice) ---
         function startApp() {
             document.getElementById('start-modal-backdrop').classList.add('hidden');
             document.getElementById('app-container').classList.remove('hidden');
-            translateUI('en'); // Initialize UI to English
-            speakPrompt(); // This call is now safe after user interaction
             updateStepUI(1);
         }
 
@@ -601,12 +720,13 @@
             // Apply new language to the UI
             translateUI(langKey);
             
-            const langMap = { en: 'English', kn: 'ಕನ್ನಡ', te: 'తెలుగు' };
+            const langMap = { en: 'English', kn: 'ಕನ್ನಡ', hi: 'हिन्दी', te: 'తెలుగు' };
             const langName = langMap[langKey] || 'English';
 
             const modalMessage = {
                 en: `You have selected **${langName}**. Click acknowledge to proceed to farm details input.`,
                 kn: `ನೀವು **ಕನ್ನಡ** ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿರುವಿರಿ. ಮುಂದುವರಿಯಲು ಒಪ್ಪಿಕೊಳ್ಳಿ.`,
+                hi: `आपने **हिन्दी** चुनी है। खेत विवरण भरने के लिए स्वीकार पर क्लिक करें।`,
                 te: `మీరు **తెలుగు** భాషను ఎంచుకున్నారు. కొనసాగడానికి అంగీకరించండి.`,
             }[langKey];
 
@@ -894,6 +1014,22 @@
             currentLangKey = 'en'; 
             translateUI('en');
         }
+
+        // Auto-detect browser language to localize the welcome modal before user starts
+        (function initLocaleOnLoad() {
+            try {
+                const navLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+                const map = [
+                    { test: /kn|kannada/, key: 'kn' },
+                    { test: /hi|hindi/, key: 'hi' },
+                    { test: /te|telugu/, key: 'te' },
+                ];
+                let key = 'en';
+                for (const m of map) { if (m.test.test(navLang)) { key = m.key; break; } }
+                currentLangKey = key;
+                translateUI(key);
+            } catch (e) { /* noop */ }
+        })();
     </script>
 
 </body>
